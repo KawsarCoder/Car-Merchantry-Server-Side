@@ -55,11 +55,18 @@ async function run() {
       res.send({ token });
     });
 
-    app.get("/product", async (req, res) => {
+    app.get("/products", async (req, res) => {
       const query = {};
       const cursor = productCollection.find(query);
       const services = await cursor.toArray();
       res.send(services);
+    });
+
+    app.get("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const service = await productCollection.findOne(query);
+      res.send(service);
     });
   } finally {
   }
