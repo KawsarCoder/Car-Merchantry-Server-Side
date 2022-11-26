@@ -45,7 +45,7 @@ async function run() {
     const productCollection = client
       .db("carMerchantry")
       .collection("productCategories");
-    // const reviewsCollection = client.db("carMerchantry").collection("reviews");
+    const itemsCollection = client.db("carMerchantry").collection("items");
 
     app.post("/jwt", (req, res) => {
       const user = req.body;
@@ -58,15 +58,34 @@ async function run() {
     app.get("/products", async (req, res) => {
       const query = {};
       const cursor = productCollection.find(query);
-      const services = await cursor.toArray();
-      res.send(services);
+      const products = await cursor.toArray();
+      res.send(products);
     });
 
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const service = await productCollection.findOne(query);
-      res.send(service);
+      const product = await productCollection.findOne(query);
+      res.send(product);
+    });
+
+    app.get("/items", async (req, res) => {
+      let query = {};
+      if (req.query.email) {
+        query = {
+          email: req.query.email,
+        };
+      }
+      const cursor = itemsCollection.find(query);
+      const items = await cursor.toArray();
+      res.send(items);
+    });
+
+    app.get("/items/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const item = await itemsCollection.findOne(query);
+      res.send(item);
     });
   } finally {
   }
