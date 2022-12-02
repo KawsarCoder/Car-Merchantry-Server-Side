@@ -16,11 +16,6 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
-// client.connect((err) => {
-//   const collection = client.db("test").collection("devices");
-//   // perform actions on the collection object
-//   client.close();
-// });
 
 function verifyJWT(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -46,6 +41,7 @@ async function run() {
       .db("carMerchantry")
       .collection("productCategories");
     const itemsCollection = client.db("carMerchantry").collection("items");
+    const userCollection = client.db("carMerchantry").collection("users");
 
     app.post("/jwt", (req, res) => {
       const user = req.body;
@@ -87,6 +83,14 @@ async function run() {
       const item = await itemsCollection.findOne(query);
       res.send(item);
     });
+
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
+
+    
   } finally {
   }
 }
