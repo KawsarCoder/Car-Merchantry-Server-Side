@@ -89,6 +89,17 @@ async function run() {
       const result = await userCollection.insertOne(user);
       res.send(result);
     });
+    app.get("/users", async (req, res) => {
+      let query = {};
+      if (req.query.email) {
+        query = {
+          email: req.query.email,
+        };
+      }
+      const cursor = userCollection.find(query);
+      const users = await cursor.toArray();
+      res.send(users);
+    });
 
     
   } finally {
