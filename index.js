@@ -83,7 +83,11 @@ async function run() {
       const item = await itemsCollection.findOne(query);
       res.send(item);
     });
-
+    app.post("/items", verifyJWT, async (req, res) => {
+      const product = req.body;
+      const result = await itemsCollection.insertOne(product);
+      res.send(result);
+    });
     app.post("/users", async (req, res) => {
       const user = req.body;
       const result = await userCollection.insertOne(user);
