@@ -83,7 +83,7 @@ async function run() {
       const item = await itemsCollection.findOne(query);
       res.send(item);
     });
-    app.post("/items", verifyJWT, async (req, res) => {
+    app.post("/items", async (req, res) => {
       const product = req.body;
       const result = await itemsCollection.insertOne(product);
       res.send(result);
@@ -110,6 +110,13 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const user = await userCollection.findOne(query);
       res.send(user);
+    });
+
+    app.delete("/items/:id", verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await itemsCollection.deleteOne(query);
+      res.send(result);
     });
   } finally {
   }
